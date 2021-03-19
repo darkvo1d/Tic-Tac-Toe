@@ -1,5 +1,4 @@
 from Player import Player
-import random
 from math import inf as infinity
 
 
@@ -46,15 +45,11 @@ class Bot(Player):
 
         if depth == 0 or self.evaluate():
             score = self.evaluate() * depth
-            if depth < 5:
-                0 and print("==>" * (9 - depth), "score", score)
             return [-1, -1, score]
 
         for cell in self.emptyCells():
             x, y = cell[0], cell[1]
             state[x][y] = player
-            if depth < 5:
-                0 and print("==>" * (9 - depth), "depth = ", depth, "player = ", player, state, "cell = ", cell)
             score = self.minimax(state, -player, depth - 1)
             state[x][y] = " "
             score[0], score[1] = x, y
