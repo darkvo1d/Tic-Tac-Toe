@@ -31,7 +31,14 @@ class Board:
 
     def isPlayable(self):
         """checks if the game is over"""
-        if self.wins("X", False) or self.wins("O", False):
+        if self.wins("X", False):
+            print("X WINS")
+            return False
+        elif self.wins("O", False):
+            print("O WINS")
+            return False
+        elif len(self.emptyCells()) == 0:
+            print("DRAW")
             return False
         return True
 
@@ -74,7 +81,6 @@ class Board:
     def __repr__(self):
         head = "\n Game Board \n\n"
         returnString = ""
-        print(self.board)
         for i in range(self.dimension):
             for j in range(self.dimension):
                 returnString += " " + self.board[i][j] + " "
@@ -153,15 +159,17 @@ class Bot(Player):
         else:
             best = [-1, -1, +infinity]
 
-        if depth == 0:
-            score = self.evaluate()
-            print("==>" * (9 - depth), "score", score)
+        if depth == 0 or self.evaluate():
+            score = depth * self.evaluate()
+            if depth < 5:
+                0 and print("==>" * (9 - depth), "score", score)
             return [-1, -1, score]
 
         for cell in self.emptyCells():
             x, y = cell[0], cell[1]
             state[x][y] = player
-            print("==>" * (9 - depth), "depth = ", depth, "player = ", player, state, "cell = ", cell)
+            if depth < 5:
+                0 and print("==>" * (9 - depth), "depth = ", depth, "player = ", player, state, "cell = ", cell)
             score = self.minimax(state, -player, depth - 1)
             state[x][y] = " "
             score[0], score[1] = x, y
@@ -187,7 +195,7 @@ class Bot(Player):
     def playMove(self):
         self.updateState()
         coord = self.getCoord()
-        print(coord)
+        #print(coord)
         super().playMove(coord)
 
 
@@ -195,12 +203,13 @@ b = Board(3)
 p1 = Bot(b, "O", "noob_1")
 p2 = Human(b, "X", "sarvang")
 b.showOrientation()
+print(b)
 
 while b.isPlayable():
-    print(b)
     if b.nextTurn == "bot":
         print("\nBot playing ...")
         p1.playMove()
     else:
         print("\nYour turn ...")
         p2.playMove()
+    print(b)
